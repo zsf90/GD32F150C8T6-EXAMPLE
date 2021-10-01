@@ -1,6 +1,6 @@
 /*!
-    \file    main.c
-    \brief   led spark with systick 
+    \file    systick.c
+    \brief   the systick configuration file
 
     \version 2014-12-26, V1.0.0, platform GD32F1x0(x=3,5)
     \version 2016-01-15, V2.0.0, platform GD32F1x0(x=3,5,7,9)
@@ -39,71 +39,50 @@ OF SUCH DAMAGE.
 
 #include "gd32f1x0.h"
 #include "systick.h"
-#include <stdio.h>
-#include "main.h"
-#include "gd32f1x0r_eval.h"
+
+volatile static uint32_t delay;
 
 /*!
-    \brief      toggle the led every 500ms
+    \brief      configure systick
     \param[in]  none
     \param[out] none
     \retval     none
 */
-void led_spark(void)
+void systick_config(void)
 {
-    static __IO uint32_t timingdelaylocal = 0;
-
-    if(timingdelaylocal){
-
-        if(timingdelaylocal < 300){
-            gd_eval_led_on(LED1);
-            gd_eval_led_off(LED2);
-        }else{
-            gd_eval_led_off(LED1);
-            gd_eval_led_on(LED2);
+    /* setup systick timer for 1000Hz interrupts */
+    if(SysTick_Config(SystemCoreClock / 1000U)){
+        /* capture error */
+        while(1){
         }
-        
-        
+    }
+    /* configure the systick handler priority */
+    NVIC_SetPriority(SysTick_IRQn, 0x00U);
+}
 
-        timingdelaylocal--;
-    }else{
-        timingdelaylocal = 600;
+/*!
+    \brief      delay a time in milliseconds
+    \param[in]  count: count in milliseconds
+    \param[out] none
+    \retval     none
+*/
+void delay_1ms(uint32_t count)
+{
+    delay = count;
+
+    while(0U != delay){
     }
 }
 
 /*!
-    \brief      main function
+    \brief      delay decrement
     \param[in]  none
     \param[out] none
     \retval     none
 */
-int main(void)
+void delay_decrement(void)
 {
-    gd_eval_key_init(KEY_WAKEUP, KEY_MODE_EXTI); /* 按键初始化 */
-    
-    gd_eval_led_init(LED1);
-    gd_eval_led_init(LED2);
-    gd_eval_led_init(LED3);
-    
-    
-
-    systick_config();
-
-    while (1)
-    {
-
+    if(0U != delay){
+        delay--;
     }
-}
-
-
-/*******************************************************************************
- * @brief 外部中断0服务函数
- ******************************************************************************/
-void EXTI0_1_IRQHandler(void)
-{
-    if(SET == exti_interrupt_flag_get(EXTI_0)){
-        gd_eval_led_toggle(LED3);
-        
-         exti_interrupt_flag_clear(EXTI_0);
-    }  
 }

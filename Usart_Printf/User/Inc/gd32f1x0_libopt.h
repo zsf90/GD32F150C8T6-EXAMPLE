@@ -1,6 +1,6 @@
 /*!
-    \file    main.c
-    \brief   led spark with systick 
+    \file    gd32f1x0_libopt.h
+    \brief   library optional for gd32f1x0
 
     \version 2014-12-26, V1.0.0, platform GD32F1x0(x=3,5)
     \version 2016-01-15, V2.0.0, platform GD32F1x0(x=3,5,7,9)
@@ -37,73 +37,36 @@ ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSI
 OF SUCH DAMAGE.
 */
 
-#include "gd32f1x0.h"
-#include "systick.h"
-#include <stdio.h>
-#include "main.h"
-#include "gd32f1x0r_eval.h"
+#ifndef GD32F1X0_LIBOPT_H
+#define GD32F1X0_LIBOPT_H
 
-/*!
-    \brief      toggle the led every 500ms
-    \param[in]  none
-    \param[out] none
-    \retval     none
-*/
-void led_spark(void)
-{
-    static __IO uint32_t timingdelaylocal = 0;
+#include "gd32f1x0_adc.h"
+#include "gd32f1x0_cec.h"
+#include "gd32f1x0_crc.h"
+#include "gd32f1x0_cmp.h"
+#include "gd32f1x0_dac.h"
+#include "gd32f1x0_dbg.h"
+#include "gd32f1x0_dma.h"
+#include "gd32f1x0_exti.h"
+#include "gd32f1x0_fmc.h"
+#include "gd32f1x0_gpio.h"
+#include "gd32f1x0_syscfg.h"
+#include "gd32f1x0_i2c.h"
+#include "gd32f1x0_fwdgt.h"
+#include "gd32f1x0_pmu.h"
+#include "gd32f1x0_rcu.h"
+#include "gd32f1x0_rtc.h"
+#include "gd32f1x0_spi.h"
+#include "gd32f1x0_timer.h"
+#include "gd32f1x0_usart.h"
+#include "gd32f1x0_wwdgt.h"
+#include "gd32f1x0_misc.h"
+#include "gd32f1x0_tsi.h"
+#ifdef GD32F170_190
+#include "gd32f1x0_slcd.h"
+#include "gd32f1x0_opa.h"
+#include "gd32f1x0_ivref.h"
+#include "gd32f1x0_can.h"
+#endif /* GD32F170_190 */
 
-    if(timingdelaylocal){
-
-        if(timingdelaylocal < 300){
-            gd_eval_led_on(LED1);
-            gd_eval_led_off(LED2);
-        }else{
-            gd_eval_led_off(LED1);
-            gd_eval_led_on(LED2);
-        }
-        
-        
-
-        timingdelaylocal--;
-    }else{
-        timingdelaylocal = 600;
-    }
-}
-
-/*!
-    \brief      main function
-    \param[in]  none
-    \param[out] none
-    \retval     none
-*/
-int main(void)
-{
-    gd_eval_key_init(KEY_WAKEUP, KEY_MODE_EXTI); /* 按键初始化 */
-    
-    gd_eval_led_init(LED1);
-    gd_eval_led_init(LED2);
-    gd_eval_led_init(LED3);
-    
-    
-
-    systick_config();
-
-    while (1)
-    {
-
-    }
-}
-
-
-/*******************************************************************************
- * @brief 外部中断0服务函数
- ******************************************************************************/
-void EXTI0_1_IRQHandler(void)
-{
-    if(SET == exti_interrupt_flag_get(EXTI_0)){
-        gd_eval_led_toggle(LED3);
-        
-         exti_interrupt_flag_clear(EXTI_0);
-    }  
-}
+#endif /* GD32F1X0_LIBOPT_H */

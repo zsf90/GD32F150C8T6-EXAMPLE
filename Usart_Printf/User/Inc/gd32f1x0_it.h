@@ -1,6 +1,6 @@
 /*!
-    \file    main.c
-    \brief   led spark with systick 
+    \file    gd32f1x0_it.h
+    \brief   the header file of the ISR
 
     \version 2014-12-26, V1.0.0, platform GD32F1x0(x=3,5)
     \version 2016-01-15, V2.0.0, platform GD32F1x0(x=3,5,7,9)
@@ -37,73 +37,29 @@ ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSI
 OF SUCH DAMAGE.
 */
 
+#ifndef GD32F1X0_IT_H
+#define GD32F1X0_IT_H
+
 #include "gd32f1x0.h"
-#include "systick.h"
-#include <stdio.h>
-#include "main.h"
-#include "gd32f1x0r_eval.h"
 
-/*!
-    \brief      toggle the led every 500ms
-    \param[in]  none
-    \param[out] none
-    \retval     none
-*/
-void led_spark(void)
-{
-    static __IO uint32_t timingdelaylocal = 0;
+/* function declarations */
+/* this function handles NMI exception */
+void NMI_Handler(void);
+/* this function handles HardFault exception */
+void HardFault_Handler(void);
+/* this function handles MemManage exception */
+void MemManage_Handler(void);
+/* this function handles BusFault exception */
+void BusFault_Handler(void);
+/* this function handles UsageFault exception */
+void UsageFault_Handler(void);
+/* this function handles SVC exception */
+void SVC_Handler(void);
+/* this function handles DebugMon exception */
+void DebugMon_Handler(void);
+/* this function handles PendSV exception */
+void PendSV_Handler(void);
+/* this function handles SysTick exception */
+void SysTick_Handler(void);
 
-    if(timingdelaylocal){
-
-        if(timingdelaylocal < 300){
-            gd_eval_led_on(LED1);
-            gd_eval_led_off(LED2);
-        }else{
-            gd_eval_led_off(LED1);
-            gd_eval_led_on(LED2);
-        }
-        
-        
-
-        timingdelaylocal--;
-    }else{
-        timingdelaylocal = 600;
-    }
-}
-
-/*!
-    \brief      main function
-    \param[in]  none
-    \param[out] none
-    \retval     none
-*/
-int main(void)
-{
-    gd_eval_key_init(KEY_WAKEUP, KEY_MODE_EXTI); /* 按键初始化 */
-    
-    gd_eval_led_init(LED1);
-    gd_eval_led_init(LED2);
-    gd_eval_led_init(LED3);
-    
-    
-
-    systick_config();
-
-    while (1)
-    {
-
-    }
-}
-
-
-/*******************************************************************************
- * @brief 外部中断0服务函数
- ******************************************************************************/
-void EXTI0_1_IRQHandler(void)
-{
-    if(SET == exti_interrupt_flag_get(EXTI_0)){
-        gd_eval_led_toggle(LED3);
-        
-         exti_interrupt_flag_clear(EXTI_0);
-    }  
-}
+#endif /* GD32F1X0_IT_H */

@@ -1,6 +1,6 @@
 /*!
-    \file    main.c
-    \brief   led spark with systick 
+    \file    gd32f1x0_it.c
+    \brief   interrupt service routines
 
     \version 2014-12-26, V1.0.0, platform GD32F1x0(x=3,5)
     \version 2016-01-15, V2.0.0, platform GD32F1x0(x=3,5,7,9)
@@ -37,73 +37,110 @@ ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSI
 OF SUCH DAMAGE.
 */
 
-#include "gd32f1x0.h"
-#include "systick.h"
-#include <stdio.h>
+#include "gd32f1x0_it.h"
 #include "main.h"
-#include "gd32f1x0r_eval.h"
+#include "systick.h"
 
 /*!
-    \brief      toggle the led every 500ms
+    \brief      this function handles NMI exception
     \param[in]  none
     \param[out] none
     \retval     none
 */
-void led_spark(void)
+void NMI_Handler(void)
 {
-    static __IO uint32_t timingdelaylocal = 0;
-
-    if(timingdelaylocal){
-
-        if(timingdelaylocal < 300){
-            gd_eval_led_on(LED1);
-            gd_eval_led_off(LED2);
-        }else{
-            gd_eval_led_off(LED1);
-            gd_eval_led_on(LED2);
-        }
-        
-        
-
-        timingdelaylocal--;
-    }else{
-        timingdelaylocal = 600;
-    }
 }
 
 /*!
-    \brief      main function
+    \brief      this function handles HardFault exception
     \param[in]  none
     \param[out] none
     \retval     none
 */
-int main(void)
+void HardFault_Handler(void)
 {
-    gd_eval_key_init(KEY_WAKEUP, KEY_MODE_EXTI); /* 按键初始化 */
-    
-    gd_eval_led_init(LED1);
-    gd_eval_led_init(LED2);
-    gd_eval_led_init(LED3);
-    
-    
-
-    systick_config();
-
-    while (1)
-    {
-
+    /* if Hard Fault exception occurs, go to infinite loop */
+    while(1){
     }
 }
 
-
-/*******************************************************************************
- * @brief 外部中断0服务函数
- ******************************************************************************/
-void EXTI0_1_IRQHandler(void)
+/*!
+    \brief      this function handles MemManage exception
+    \param[in]  none
+    \param[out] none
+    \retval     none
+*/
+void MemManage_Handler(void)
 {
-    if(SET == exti_interrupt_flag_get(EXTI_0)){
-        gd_eval_led_toggle(LED3);
-        
-         exti_interrupt_flag_clear(EXTI_0);
-    }  
+    /* if Memory Manage exception occurs, go to infinite loop */
+    while(1){
+    }
+}
+
+/*!
+    \brief      this function handles BusFault exception
+    \param[in]  none
+    \param[out] none
+    \retval     none
+*/
+void BusFault_Handler(void)
+{
+    /* if Bus Fault exception occurs, go to infinite loop */
+    while(1){
+    }
+}
+
+/*!
+    \brief      this function handles UsageFault exception
+    \param[in]  none
+    \param[out] none
+    \retval     none
+*/
+void UsageFault_Handler(void)
+{
+    /* if Usage Fault exception occurs, go to infinite loop */
+    while(1){
+    }
+}
+
+/*!
+    \brief      this function handles SVC exception
+    \param[in]  none
+    \param[out] none
+    \retval     none
+*/
+void SVC_Handler(void)
+{
+}
+
+/*!
+    \brief      this function handles DebugMon exception
+    \param[in]  none
+    \param[out] none
+    \retval     none
+*/
+void DebugMon_Handler(void)
+{
+}
+
+/*!
+    \brief      this function handles PendSV exception
+    \param[in]  none
+    \param[out] none
+    \retval     none
+*/
+void PendSV_Handler(void)
+{
+}
+
+/*!
+    \brief      this function handles SysTick exception
+    \param[in]  none
+    \param[out] none
+    \retval     none
+*/
+void SysTick_Handler(void)
+{
+    led_spark();
+    delay_decrement(); /* delay 递减 */
 }

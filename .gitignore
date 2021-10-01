@@ -1,0 +1,6 @@
+*.log
+*.map
+*.lst
+*.scvd
+**/Objects/
+**/Listings/

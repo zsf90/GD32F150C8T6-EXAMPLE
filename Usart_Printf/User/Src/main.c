@@ -42,6 +42,7 @@ OF SUCH DAMAGE.
 #include <stdio.h>
 #include "main.h"
 #include "gd32f1x0r_eval.h"
+#include "usart.h"
 
 /*!
     \brief      toggle the led every 500ms
@@ -85,13 +86,16 @@ int main(void)
     gd_eval_led_init(LED2);
     gd_eval_led_init(LED3);
     
+    usart1_init();
+    
     
 
     systick_config();
 
     while (1)
     {
-
+        printf("Hello,GD32!\n");
+        delay_1ms(1000);
     }
 }
 

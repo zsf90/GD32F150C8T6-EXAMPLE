@@ -1,26 +1,17 @@
-基于 GD32F150C8T6 的 LED 闪烁程序。
+# gd32 串口中断收发数据
 
-用到的函数：
-1. gd_eval_led_init(LED1);
 
-2. led_spark(void);
-```c
-void led_spark(void)
-{
-    static __IO uint32_t timingdelaylocal = 0;
 
-    if(timingdelaylocal){
+要实现的功能：
 
-        if(timingdelaylocal < 50){
-            gd_eval_led_on(LED1);
-        }else{
-            gd_eval_led_off(LED1);
-        }
+1. 以中断的方式接收数据
+2. 以中断的方式发送数据
 
-        timingdelaylocal--;
-    }else{
-        timingdelaylocal = 100;
-    }
-}
-```
+## 中断发送数据
+
+用按键控制串口发送数据，用户按一下按钮，单片机发送一个数据。这里需要用到外部中断。
+
+## 用串口助手发送数据，单片机接收数据
+
+使用串口助手给单片机发送数据
 

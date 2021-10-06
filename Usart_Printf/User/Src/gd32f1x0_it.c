@@ -38,8 +38,15 @@ OF SUCH DAMAGE.
 */
 
 #include "gd32f1x0_it.h"
-#include "main.h"
 #include "systick.h"
+#include "main.h"
+#include "gd32f1x0r_eval.h"
+#include "usart.h"
+#include <string.h>
+#include <stdio.h>
+
+extern USART_InitTypeDef usart1;
+
 
 /*!
     \brief      this function handles NMI exception
@@ -143,4 +150,52 @@ void SysTick_Handler(void)
 {
     led_spark();
     delay_decrement(); /* delay 递减 */
+}
+
+/*******************************************************************************
+ * @brief 外部中断0-1服务函数
+ ******************************************************************************/
+void EXTI0_1_IRQHandler(void)
+{
+    if(SET == exti_interrupt_flag_get(EXTI_0)){
+        usart_interrupt_enable(USART1, USART_INT_TBE); // 使能USART发送器空中断
+        exti_interrupt_flag_clear(EXTI_0);
+    }  
+}
+
+/*******************************************************************************
+ * @brief 串口1中断服务函数
+ ******************************************************************************/
+void USART1_IRQHandler(void)
+{
+    /* 接收器非空 */
+    if(RESET != usart_interrupt_flag_get(USART1, USART_INT_FLAG_RBNE))
+    {
+        uint8_t ch;
+        ch = usart_data_receive(USART1);
+        if('#' != ch)
+        {
+            usart1.rx_buffer[usart1.rx_count++] = ch;
+        } else {
+            usart1.rx_count = 0;
+            usart1.rx_over  = 1;
+        }
+    }
+    
+    /* 发送器空 */
+    if(RESET != usart_interrupt_flag_get(USART1, USART_INT_FLAG_TBE))
+    {
+        usart_data_transmit(USART1, usart1.tx_buffer[usart1.tx_count++]);
+        if(usart1.tx_count == TX_BUF_LENGTH)
+        {
+            usart1.tx_count = 0;
+            usart_interrupt_disable(USART1, USART_INT_TBE);
+        }
+    }
+
+    /* 空闲判断 */
+    if(RESET != usart_interrupt_flag_get(USART1, USART_INT_FLAG_IDLE))
+    {
+        usart_interrupt_flag_clear(USART1, USART_INT_FLAG_IDLE);
+    }
 }

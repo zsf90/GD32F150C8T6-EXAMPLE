@@ -40,6 +40,13 @@ OF SUCH DAMAGE.
 #ifndef __MAIN_H
 #define __MAIN_H
 
+#include "gd32f1x0.h"
+
+#define DEBUG   (1)
+
+
+
+
 /* led spark function */
 void led_spark(void);
 

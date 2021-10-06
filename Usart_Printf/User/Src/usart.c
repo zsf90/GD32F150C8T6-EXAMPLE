@@ -1,9 +1,18 @@
 #include "usart.h"
-#include <stdio.h>
 #include "gd32f1x0.h"
 #include "gd32f1x0_usart.h"
+#include "gd32f1x0r_eval.h"
+#include <stdio.h>
+#include <string.h>
 
-void usart1_init(void)
+#define HELLO   ("Hello,World\n")
+
+USART_InitTypeDef usart1;
+
+/*******************************************************************************
+ * @brief 串口配置
+ ******************************************************************************/
+void usart_config(void)
 {
     rcu_periph_clock_enable(RCU_USART1);    /* 使能 USART1 时钟*/
     usart_deinit(USART1);
@@ -21,13 +30,58 @@ void usart1_init(void)
     
     /* USART configure */
     usart_deinit(USART1);
-    usart_baudrate_set(USART1,115200U);
-    usart_stop_bit_set(USART1, 1);
-    usart_word_length_set(USART1, USART_WL_8BIT);
-    usart_parity_config(USART1, USART_PM_NONE);
-    usart_transmit_config(USART1, USART_TRANSMIT_ENABLE);
-    usart_receive_config(USART1, USART_RECEIVE_ENABLE);
-    usart_enable(USART1); /* 使能串口1 */
+    usart_baudrate_set(USART1,115200U);                     /* 波特率设置 */
+    usart_stop_bit_set(USART1, 1);                          /* 停止位长度 */
+    usart_word_length_set(USART1, USART_WL_8BIT);           /* 数据位长度 */
+    usart_parity_config(USART1, USART_PM_NONE);             /* 奇偶校验设置 */
+    usart_transmit_config(USART1, USART_TRANSMIT_ENABLE);   /* 发送数据使能 */
+    usart_receive_config(USART1, USART_RECEIVE_ENABLE);     /* 接收数据使能 */
+    usart_enable(USART1);                                   /* 使能串口1 */
+    
+    /* 使能USART1中断向量控制器，设置抢占优先级和相应优先级都为0 */
+    nvic_irq_enable(USART1_IRQn, 0, 0);
+    /* 使能USART1发送寄存器空中断使能 */
+    usart_interrupt_disable(USART1, USART_INT_TBE);
+    /* 使能读数据缓冲区非空中断 */
+    usart_interrupt_enable(USART1, USART_INT_RBNE);
+    /* 使能空闲中断 */
+    usart_interrupt_disable(USART1, USART_INT_IDLE);
+    
+    usart_init_typedef(&usart1);
+}
+
+
+/*******************************************************************************
+ * @brief 串口自定义类型初始化
+ ******************************************************************************/
+void usart_init_typedef(USART_InitTypeDef *u)
+{
+    u->rx_count     = 0;
+    u->rx_over      = 0;
+    u->tx_count     = 0;
+    u->tx_over      = 0;
+    strcpy((char*)u->tx_buffer, HELLO);
+}
+
+/*******************************************************************************
+ * @brief 接收处理
+ ******************************************************************************/
+void receive_handle(void)
+{
+    if(usart1.rx_over == 1)
+    {
+        printf("接收数据完成\n");
+        if(strstr((const char*)usart1.rx_buffer, "LED_ON") != NULL)
+        {
+            gd_eval_led_off(LED3);
+        }
+
+        if(strstr((const char*)usart1.rx_buffer, "LED_OFF") != NULL)
+        {
+            gd_eval_led_on(LED3);
+        }
+        usart1.rx_over = 0;
+    }
 }
 
 #ifdef GD32F130_150

@@ -23,9 +23,9 @@ void encoder_exit_config(encoder_mode_enum _zsf_eme)
     if(_zsf_eme == ENCODER_MODE_EXIT)
     {
         /* enable and set key EXTI interrupt to the lowest priority */
-        nvic_irq_enable(ENCODER_CLK_EXTI_IRQn, 2U, 0U);
-        nvic_irq_enable(ENCODER_DT_EXTI_IRQn, 2U, 0U);
-        nvic_irq_enable(ENCODER_SW_EXTI_IRQn, 2U, 0U);
+        nvic_irq_enable(ENCODER_CLK_EXTI_IRQn, 1U, 1U);
+        nvic_irq_enable(ENCODER_DT_EXTI_IRQn, 1U, 1U);
+        nvic_irq_enable(ENCODER_SW_EXTI_IRQn, 1U, 1U);
         
         /* connect key EXTI line to key GPIO pin */
         syscfg_exti_line_config(ENCODER_CLK_EXTI_PORT_SOURCE, ENCODER_CLK_EXTI_PIN_SOURCE);

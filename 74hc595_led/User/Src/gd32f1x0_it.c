@@ -49,6 +49,7 @@ OF SUCH DAMAGE.
 extern USART_InitTypeDef usart1;
 
 uint16_t test_number = 0;
+uint16_t test_led_value = 0;
 /*!
     \brief      this function handles NMI exception
     \param[in]  none
@@ -225,4 +226,22 @@ void USART1_IRQHandler(void)
     {
         usart_interrupt_flag_clear(USART1, USART_INT_FLAG_IDLE);
     }
+}
+
+
+/*******************************************************************************
+ * @brief TIMER1 中断处理函数
+ ******************************************************************************/
+void TIMER1_IRQHandler(void)
+{
+    if(SET == timer_interrupt_flag_get(TIMER1, TIMER_INT_FLAG_UP)){
+        timer_interrupt_flag_clear(TIMER1, TIMER_INT_FLAG_UP);
+//        test_led_value++;
+//        if(test_led_value > 100){
+            gd_eval_led_toggle(LED1);
+//            test_led_value = 0;
+//        }
+        
+    }
+    
 }

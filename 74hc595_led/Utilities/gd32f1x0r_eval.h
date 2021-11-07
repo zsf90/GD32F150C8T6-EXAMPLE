@@ -76,9 +76,9 @@ typedef enum
 /* GD32130_150 eval low layer led */
 #define LEDn                             4
 
-#define LED1_PIN                         GPIO_PIN_7
-#define LED1_GPIO_PORT                   GPIOB
-#define LED1_GPIO_CLK                    RCU_GPIOB
+#define LED1_PIN                         GPIO_PIN_15
+#define LED1_GPIO_PORT                   GPIOA
+#define LED1_GPIO_CLK                    RCU_GPIOA
   
 #define LED2_PIN                         GPIO_PIN_6
 #define LED2_GPIO_PORT                   GPIOB

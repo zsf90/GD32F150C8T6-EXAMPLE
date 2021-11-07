@@ -46,6 +46,7 @@ OF SUCH DAMAGE.
 #include <stdio.h>
 #include "74hc595_led.h"
 #include "encoder.h"
+#include "timer.h"
 
 extern uint16_t test_number;
 /*!
@@ -81,6 +82,9 @@ void led_spark(void)
 int main(void)
 {
     systick_config();
+    
+    gd_eval_led_init(LED1);
+
 
     /* 串口中断配置 */
     /* 初始化串口1配置 */
@@ -89,6 +93,7 @@ int main(void)
     delay_1ms(10);
     
     encoder_exit_config(ENCODER_MODE_EXIT);
+    timer_config();
 
     while (1)
     {
@@ -113,6 +118,8 @@ int main(void)
 //        hc595_show_strings("FU-4");
 //        delay_1ms(1000);
         hc595_show_number(test_number);
+//        gd_eval_led_toggle(LED1);
+//        delay_1ms(1000);
         receive_handle(); /* 串口接受处理函数 */
     }
 }

@@ -85,14 +85,6 @@ void encoder_handle(void)
         ec11_1.sw_down_time = 0;
     }
 
-    // if(SW_State == SET && ec11_1.sw_down_count == 2 && ec11_1.sw_down_time > 100)
-    // {
-    //     ec11_1.sw_mode_flag = 1;    // 单击
-    //     ec11_1.sw_down_time = 0;
-    //     ec11_1.sw_down_flag = 0;
-    //     ec11_1.sw_down_count = 0;
-    // }
-
     if(ec11_1.sw_down_flag == 1 && ec11_1.sw_down_count == 2 && ec11_1.sw_down_time > 100)
     {
         if(SW_State == RESET)
@@ -112,20 +104,31 @@ void encoder_handle(void)
     // 长按
     if(ec11_1.sw_mode_flag == 2)
     {
-        test_number++;
-        ec11_1.sw_mode_flag = 0;
+        // 指定多少毫秒加1
+        if(ec11_1.sw_long_press_time == LED_AUTO_SETP)
+        {
+            test_number++;
+            ec11_1.sw_long_press_time = 0;
+        }
+        
+        FlagStatus sw_state_temp = gpio_input_bit_get(ENCODER_SW_GPIO_PORT, ENCODER_SW_PIN);
+        if(sw_state_temp == SET)
+        {
+            ec11_1.sw_mode_flag = 0;
+        }
+        
     }
     // 单击
     if(ec11_1.sw_mode_flag == 1)
     {
-        test_number--;
+        test_number++;
         ec11_1.sw_mode_flag = 0;
     }
 
     // 双击
     if(ec11_1.sw_mode_flag == 3)
     {
-        test_number = 0;
+        test_number += 10;
         ec11_1.sw_mode_flag = 0;
     } 
 }
@@ -134,18 +137,11 @@ void encoder_handle(void)
  * @brief EC11 结构体初始化
  * @brief sw_mode_flag: 
  ******************************************************************************/
-void ec11_init(EC11_t ec11)
+inline void ec11_init(EC11_t ec11)
 {
     ec11.sw_down_time = 0;
     ec11.sw_mode_flag = 0;
     ec11.sw_down_flag = 0;
     ec11.sw_down_count = 0;
-}
-
-__STATIC_INLINE void ec11_struct_reset(EC11_t ec11)
-{
-    ec11.sw_down_flag = 0;
-    ec11.sw_down_time = 0;
-    ec11_1.sw_down_count = 0;
-    ec11.sw_mode_flag = 0;
+    ec11.sw_long_press_time = 0;
 }

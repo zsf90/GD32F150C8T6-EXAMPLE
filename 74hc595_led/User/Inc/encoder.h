@@ -17,6 +17,7 @@
 #include "gd32f1x0.h"
 
 #define LONG_PRESS_VALUE    (1000)
+#define LED_AUTO_SETP   (50) // 毫秒
 
 typedef enum
 {
@@ -38,8 +39,11 @@ typedef struct
 {
     uint16_t    sw_down_time; /* >100ms 为单击，> 900为长按 */
     uint8_t     sw_mode_flag; /* 单击（1），长按（2），双击（3），未知（0）*/
-    uint8_t     sw_down_flag; /* SW 下降沿标志，下降沿触发时为：1，用完后设置为：0 */
-    uint8_t     sw_down_count; /* 下降沿计数，用户判断双击还是单击 */
+    uint8_t     sw_down_flag; /* SW 下降沿标志，下降沿触发时为：1，用完后在适当的时候设置为：0 */
+    uint8_t     sw_down_count; /* 下降沿计数，用户判断状态的临时计数值 */
+    uint16_t    sw_long_press_time;  /* sw 长按时间，用于判断长按时多长时间执行一次相应代码 */
+
+
 } EC11_t;
 
 /* GPIO Define */
@@ -75,7 +79,5 @@ void encoder_exit_config(encoder_mode_enum _zsf_eme);
 void encoder_handle(void);
 
 void ec11_init(EC11_t ec11);
-
-__STATIC_INLINE void ec11_struct_reset(EC11_t ec11);
 
 #endif /* __ENCODER_H */

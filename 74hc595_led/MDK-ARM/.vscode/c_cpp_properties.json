@@ -8,12 +8,12 @@
                 "d:\\dev\\electronic_project\\GigaDevice\\Project\\Example\\gd32f150c8t6_prj\\74hc595_led\\Firmware\\GD32F1x0_standard_peripheral\\Include",
                 "d:\\dev\\electronic_project\\GigaDevice\\Project\\Example\\gd32f150c8t6_prj\\74hc595_led\\Utilities",
                 "d:\\dev\\electronic_project\\GigaDevice\\Project\\Example\\gd32f150c8t6_prj\\74hc595_led\\Firmware\\GD32F1x0_usbd_library\\usbd\\Include",
+                "d:\\dev\\electronic_project\\GigaDevice\\Project\\Example\\gd32f150c8t6_prj\\74hc595_led\\Firmware\\CMSIS",
                 "d:\\dev\\electronic_project\\GigaDevice\\Project\\Example\\gd32f150c8t6_prj\\74hc595_led\\User\\Src",
                 "d:\\dev\\electronic_project\\GigaDevice\\Project\\Example\\gd32f150c8t6_prj\\74hc595_led\\Firmware\\CMSIS\\GD\\GD32F1x0\\Source",
                 "d:\\dev\\electronic_project\\GigaDevice\\Project\\Example\\gd32f150c8t6_prj\\74hc595_led\\MDK-ARM",
                 "d:\\dev\\electronic_project\\GigaDevice\\Project\\Example\\gd32f150c8t6_prj\\74hc595_led\\Firmware\\GD32F1x0_standard_peripheral\\Source",
-                "d:\\dev\\electronic_project\\GigaDevice\\Project\\Example\\gd32f150c8t6_prj\\74hc595_led\\Docs",
-                "d:\\dev\\electronic_project\\GigaDevice\\Project\\Example\\gd32f150c8t6_prj\\74hc595_led\\Firmware\\CMSIS"
+                "d:\\dev\\electronic_project\\GigaDevice\\Project\\Example\\gd32f150c8t6_prj\\74hc595_led\\Docs"
             ],
             "defines": [
                 "USE_STDPERIPH_DRIVER",

@@ -158,6 +158,12 @@ void SysTick_Handler(void)
     if(ec11_1.sw_down_flag == 1){
         ec11_1.sw_down_time++;
     }
+
+    // 当 SW 为长按时，让 led_auto_setp++
+    if(ec11_1.sw_mode_flag == 2)
+    {
+        ec11_1.sw_long_press_time++;
+    }
     
 }
 

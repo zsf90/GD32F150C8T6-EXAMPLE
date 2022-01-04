@@ -41,7 +41,7 @@ OF SUCH DAMAGE.
 #include "systick.h"
 #include "main.h"
 #include "gd32f1x0r_eval.h"
-#include "usart.h"
+//#include "usart.h"
 #include "gd32f1x0_it.h"
 #include <stdio.h>
 #include "74hc595_led.h"
@@ -85,41 +85,18 @@ int main(void)
     
     gd_eval_led_init(LED1);
 
-
-    /* ´®¿ÚÖĞ¶ÏÅäÖÃ */
-    /* ³õÊ¼»¯´®¿Ú1ÅäÖÃ */
-    //usart_config();
-    init_74hc595(); /* ³õÊ¼»¯ 74hc595 */
+    init_74hc595(); /* åˆå§‹åŒ– 74hc595 */
     delay_1ms(10);
     
-    encoder_exit_config(ENCODER_MODE_EXIT);
-    timer_config();
+    encoder_exit_config(ENCODER_MODE_EXIT); /* é…ç½® EC11 æ—‹è½¬ç¼–ç å™¨ */
+    timer_config(); /* å®šæ—¶å™¨é…ç½® */
 
     while (1)
     {
-//        hc595_show_strings("ERR0");
-//        delay_1ms(1000);
-//        hc595_show_strings("ERR1");
-//        delay_1ms(1000);
-//        hc595_show_strings("ERR2");
-//        delay_1ms(1000);
-//        hc595_show_strings("ERR3");
-//        delay_1ms(1000);
-//        hc595_show_strings("ERR4");
-//        delay_1ms(1000);
-//        hc595_show_strings("FU-0");
-//        delay_1ms(1000);
-//        hc595_show_strings("FU-1");
-//        delay_1ms(1000);
-//        hc595_show_strings("FU-2");
-//        delay_1ms(1000);
-//        hc595_show_strings("FU-3");
-//        delay_1ms(1000);
-//        hc595_show_strings("FU-4");
-//        delay_1ms(1000);
         hc595_show_number(test_number);
-//        gd_eval_led_toggle(LED1);
-//        delay_1ms(1000);
-        receive_handle(); /* ´®¿Ú½ÓÊÜ´¦Àíº¯Êı */
+        encoder_handle();
+        #if DEBUG
+        receive_handle(); /* ä¸²å£æ¥æ”¶ */
+        #endif
     }
 }

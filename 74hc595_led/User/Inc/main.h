@@ -42,7 +42,7 @@ OF SUCH DAMAGE.
 
 #include "gd32f1x0.h"
 
-#define DEBUG   (1)
+#define DEBUG   (0)
 
 
 

@@ -21,7 +21,6 @@ typedef enum
     ERR2,
     ERR3,
     ERR4,
-    
     FU0,
     FU1,
     FU2,

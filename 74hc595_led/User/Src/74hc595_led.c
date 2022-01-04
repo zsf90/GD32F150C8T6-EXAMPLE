@@ -1,8 +1,8 @@
 /*******************************************************************************
  * @file        74hc595_led.c
  * @date        2021.10.21
- * @author      ĞÅÄîDÁ¦Á¿
- * @brief       Ê¹ÓÃ 74HC595 ÓÃ´®ĞĞÏß¿ØÖÆ¶àÎ» LED ÊıÂë¹Ü
+ * @author      ä¿¡å¿µDåŠ›é‡
+ * @brief       ä½¿ç”¨ 74HC595 ç”¨ä¸²è¡Œçº¿æ§åˆ¶å¤šä½ LED æ•°ç ç®¡
  * @github      https://github.com/zsf90/GD32F150C8T6-EXAMPLE
  * @bilibili    https://space.bilibili.com/334715750
  ******************************************************************************/
@@ -19,7 +19,7 @@
 
 
 
-/* ¹²Ñô */
+/* å…±é˜³ */
 uint8_t led_code[] = {
     0xc0,   // 0 ->0
     0xf9,   // 1 ->1
@@ -59,8 +59,8 @@ uint8_t led_code[] = {
     0x91,   // Y ->35
     0xa5,   // Z ->36
     0xbf,   // - ->37
-    0x00,   // È«ÁÁ ->38
-    0xff    // È«Ãğ ->39
+    0x00,   // å…¨äº® ->38
+    0xff    // å…¨ç­ ->39
 };
 
 uint8_t led_flag_code[][4] = {
@@ -76,28 +76,28 @@ uint8_t led_flag_code[][4] = {
     { 0x8e, 0xc1, 0xbf, 0x99 },// FU-4 ->9  
 };
 
-/* ÎÄ¼şÄÚº¯ÊıÉùÃ÷ */
+/* æ–‡ä»¶å†…å‡½æ•°å£°æ˜ */
 static void spi_config(void);
 static void gpio_config(void);
 static void rcu_config(void);
 static void show_string(LED_Index_enum);
 
 
-/* ÊıÂë¹Ü SPI ³õÊ¼»¯ */
+/* æ•°ç ç®¡ SPI åˆå§‹åŒ– */
 
 /*******************************************************************************
- * @brief ÊıÂë¹Ü SPI ÅäÖÃ
+ * @brief æ•°ç ç®¡ SPI é…ç½®
  ******************************************************************************/
 void init_74hc595(void)
 {
     rcu_config();       /* RCU Config */
     gpio_config();      /* GPIO Config */
     spi_config();       /* SPI Config */
-    spi_enable(SPI0);   /* Ê¹ÄÜ SPI0 */
+    spi_enable(SPI0);   /* ä½¿èƒ½ SPI0 */
 }
 
 /*******************************************************************************
- * @brief SPI ÅäÖÃ
+ * @brief SPI é…ç½®
  ******************************************************************************/
 void spi_config(void)
 {
@@ -107,18 +107,18 @@ void spi_config(void)
     spi_struct_para_init(&spi_init_struct);
     
     /* SPI0 parameter config */
-    spi_init_struct.trans_mode              = SPI_TRANSMODE_FULLDUPLEX; /* SPI Í¨ĞÅÄ£Ê½ÅäÖÃ */
-    spi_init_struct.device_mode             = SPI_MASTER; /* Ö÷»ú´Ó»úÄ£Ê½ÅäÖÃ */
-    spi_init_struct.frame_size              = SPI_FRAMESIZE_8BIT; /* Êı¾İÖ¡´óĞ¡ */
-    spi_init_struct.clock_polarity_phase    = SPI_CK_PL_LOW_PH_1EDGE; /* PL ¿ÕÏĞÊ±µÍµçÆ½£¬PH µÚÒ»¸ö±ßÑØ²ÉÑù */
+    spi_init_struct.trans_mode              = SPI_TRANSMODE_FULLDUPLEX; /* SPI é€šä¿¡æ¨¡å¼é…ç½® */
+    spi_init_struct.device_mode             = SPI_MASTER; /* ä¸»æœºä»æœºæ¨¡å¼é…ç½® */
+    spi_init_struct.frame_size              = SPI_FRAMESIZE_8BIT; /* æ•°æ®å¸§å¤§å° */
+    spi_init_struct.clock_polarity_phase    = SPI_CK_PL_LOW_PH_1EDGE; /* PL ç©ºé—²æ—¶ä½ç”µå¹³ï¼ŒPH ç¬¬ä¸€ä¸ªè¾¹æ²¿é‡‡æ · */
     spi_init_struct.nss                     = SPI_NSS_SOFT; /* SPI NSS control by handware or software */
-    spi_init_struct.prescale                = SPI_PSC_16; /* SPIÔ¤·ÖÆµÒò×Ó */
-    spi_init_struct.endian                  = SPI_ENDIAN_MSB; /* ¸ßÎ»ÏÈ·¢ */
+    spi_init_struct.prescale                = SPI_PSC_16; /* SPIé¢„åˆ†é¢‘å› å­ */
+    spi_init_struct.endian                  = SPI_ENDIAN_MSB; /* é«˜ä½å…ˆå‘ */
     spi_init(SPI0, &spi_init_struct);
 }
 
 /*******************************************************************************
- * @brief SPI GPIO ÅäÖÃ
+ * @brief SPI GPIO é…ç½®
  ******************************************************************************/
 void gpio_config(void)
 {
@@ -135,7 +135,7 @@ void gpio_config(void)
 }
 
 /*******************************************************************************
- * @brief RCU ÅäÖÃ
+ * @brief RCU é…ç½®
  ******************************************************************************/
 void rcu_config(void)
 {
@@ -144,7 +144,7 @@ void rcu_config(void)
 }
 
 /*******************************************************************************
- * @brief ÏÔÊ¾Êı×Ö
+ * @brief æ˜¾ç¤ºæ•°å­—
  ******************************************************************************/
 void hc595_show_number(uint16_t n)
 {
@@ -176,7 +176,7 @@ void hc595_show_number(uint16_t n)
 }
 
 /*******************************************************************************
-* @brief SPI ·¢ËÍÒ»¸ö×Ö½ÚÊı¾İ
+* @brief SPI å‘é€ä¸€ä¸ªå­—èŠ‚æ•°æ®
  ******************************************************************************/
 uint8_t spi_rw_byte(uint8_t data)
 {
@@ -189,7 +189,7 @@ uint8_t spi_rw_byte(uint8_t data)
 }
 
 /*******************************************************************************
- * @brief ÊıÂë¹Ü²âÊÔ
+ * @brief æ•°ç ç®¡æµ‹è¯•
  ******************************************************************************/
 void hc595_all_test(void)
 {

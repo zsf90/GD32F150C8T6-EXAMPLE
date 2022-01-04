@@ -1,8 +1,8 @@
 /*******************************************************************************
  * @file        usart.c
  * @date        2021.10.21
- * @author      ĞÅÄîDÁ¦Á¿
- * @brief       ´®¿ÚÔ´ÎÄ¼ş
+ * @author      ä¿¡å¿µDåŠ›é‡
+ * @brief       ä¸²å£æºæ–‡ä»¶
  * @github      https://github.com/zsf90/GD32F150C8T6-EXAMPLE
  * @bilibili    https://space.bilibili.com/334715750
  ******************************************************************************/
@@ -18,41 +18,41 @@
 USART_InitTypeDef usart1;
 
 /*******************************************************************************
- * @brief ´®¿ÚÅäÖÃ
+ * @brief ä¸²å£é…ç½®
  ******************************************************************************/
 void usart_config(void)
 {
-    rcu_periph_clock_enable(RCU_USART1);    /* Ê¹ÄÜ USART1 Ê±ÖÓ*/
+    rcu_periph_clock_enable(RCU_USART1);    /* ä½¿èƒ½ USART1 æ—¶é’Ÿ*/
     usart_deinit(USART1);
     
-    /* Á´½Ó port PA2 µ½´®¿Ú Tx */
+    /* é“¾æ¥ port PA2 åˆ°ä¸²å£ Tx */
     gpio_af_set(GPIOA, GPIO_AF_1, GPIO_PIN_2);
-    /* Á´½Ó port PA3 µ½´®¿Ú Rx */
+    /* é“¾æ¥ port PA3 åˆ°ä¸²å£ Rx */
     gpio_af_set(GPIOA, GPIO_AF_1, GPIO_PIN_3);
      
     /* gpio config */
-    gpio_mode_set(GPIOA, GPIO_MODE_AF, GPIO_PUPD_PULLUP, GPIO_PIN_2); /* PA2 Tx ¸´ÓÃ¹¦ÄÜÉÏÀ­ */
+    gpio_mode_set(GPIOA, GPIO_MODE_AF, GPIO_PUPD_PULLUP, GPIO_PIN_2); /* PA2 Tx å¤ç”¨åŠŸèƒ½ä¸Šæ‹‰ */
     gpio_output_options_set(GPIOA, GPIO_OTYPE_PP, GPIO_OSPEED_10MHZ, GPIO_PIN_2);
-    gpio_mode_set(GPIOA, GPIO_MODE_AF, GPIO_PUPD_PULLUP, GPIO_PIN_3); /* PA3 Rx ¸´ÓÃ¹¦ÄÜÉÏÀ­ */
+    gpio_mode_set(GPIOA, GPIO_MODE_AF, GPIO_PUPD_PULLUP, GPIO_PIN_3); /* PA3 Rx å¤ç”¨åŠŸèƒ½ä¸Šæ‹‰ */
     gpio_output_options_set(GPIOA, GPIO_OTYPE_PP, GPIO_OSPEED_10MHZ, GPIO_PIN_3);
     
     /* USART configure */
     usart_deinit(USART1);
-    usart_baudrate_set(USART1,115200U);                     /* ²¨ÌØÂÊÉèÖÃ */
-    usart_stop_bit_set(USART1, 1);                          /* Í£Ö¹Î»³¤¶È */
-    usart_word_length_set(USART1, USART_WL_8BIT);           /* Êı¾İÎ»³¤¶È */
-    usart_parity_config(USART1, USART_PM_NONE);             /* ÆæÅ¼Ğ£ÑéÉèÖÃ */
-    usart_transmit_config(USART1, USART_TRANSMIT_ENABLE);   /* ·¢ËÍÊı¾İÊ¹ÄÜ */
-    usart_receive_config(USART1, USART_RECEIVE_ENABLE);     /* ½ÓÊÕÊı¾İÊ¹ÄÜ */
-    usart_enable(USART1);                                   /* Ê¹ÄÜ´®¿Ú1 */
+    usart_baudrate_set(USART1,115200U);                     /* æ³¢ç‰¹ç‡è®¾ç½® */
+    usart_stop_bit_set(USART1, 1);                          /* åœæ­¢ä½é•¿åº¦ */
+    usart_word_length_set(USART1, USART_WL_8BIT);           /* æ•°æ®ä½é•¿åº¦ */
+    usart_parity_config(USART1, USART_PM_NONE);             /* å¥‡å¶æ ¡éªŒè®¾ç½® */
+    usart_transmit_config(USART1, USART_TRANSMIT_ENABLE);   /* å‘é€æ•°æ®ä½¿èƒ½ */
+    usart_receive_config(USART1, USART_RECEIVE_ENABLE);     /* æ¥æ”¶æ•°æ®ä½¿èƒ½ */
+    usart_enable(USART1);                                   /* ä½¿èƒ½ä¸²å£1 */
     
-    /* Ê¹ÄÜUSART1ÖĞ¶ÏÏòÁ¿¿ØÖÆÆ÷£¬ÉèÖÃÇÀÕ¼ÓÅÏÈ¼¶ºÍÏàÓ¦ÓÅÏÈ¼¶¶¼Îª0 */
+    /* ä½¿èƒ½USART1ä¸­æ–­å‘é‡æ§åˆ¶å™¨ï¼Œè®¾ç½®æŠ¢å ä¼˜å…ˆçº§å’Œç›¸åº”ä¼˜å…ˆçº§éƒ½ä¸º0 */
     nvic_irq_enable(USART1_IRQn, 0, 0);
-    /* Ê¹ÄÜUSART1·¢ËÍ¼Ä´æÆ÷¿ÕÖĞ¶ÏÊ¹ÄÜ */
+    /* ä½¿èƒ½USART1å‘é€å¯„å­˜å™¨ç©ºä¸­æ–­ä½¿èƒ½ */
     usart_interrupt_disable(USART1, USART_INT_TBE);
-    /* Ê¹ÄÜ¶ÁÊı¾İ»º³åÇø·Ç¿ÕÖĞ¶Ï */
+    /* ä½¿èƒ½è¯»æ•°æ®ç¼“å†²åŒºéç©ºä¸­æ–­ */
     usart_interrupt_enable(USART1, USART_INT_RBNE);
-    /* Ê¹ÄÜ¿ÕÏĞÖĞ¶Ï */
+    /* ä½¿èƒ½ç©ºé—²ä¸­æ–­ */
     usart_interrupt_disable(USART1, USART_INT_IDLE);
     
     usart_init_typedef(&usart1);
@@ -60,7 +60,7 @@ void usart_config(void)
 
 
 /*******************************************************************************
- * @brief ´®¿Ú×Ô¶¨ÒåÀàĞÍ³õÊ¼»¯
+ * @brief ä¸²å£è‡ªå®šä¹‰ç±»å‹åˆå§‹åŒ–
  ******************************************************************************/
 void usart_init_typedef(USART_InitTypeDef *u)
 {
@@ -72,13 +72,13 @@ void usart_init_typedef(USART_InitTypeDef *u)
 }
 
 /*******************************************************************************
- * @brief ½ÓÊÕ´¦Àí
+ * @brief æ¥æ”¶å¤„ç†
  ******************************************************************************/
 void receive_handle(void)
 {
     if(usart1.rx_over == 1)
     {
-        printf("½ÓÊÕÊı¾İÍê³É\n");
+        printf("æ¥æ”¶æ•°æ®å®Œæˆ\n");
         if(strstr((const char*)usart1.rx_buffer, "LED_ON") != NULL)
         {
             //gd_eval_led_off(LED3);

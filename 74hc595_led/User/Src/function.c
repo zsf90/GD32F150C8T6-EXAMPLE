@@ -1,25 +1,25 @@
 /*******************************************************************************
  * @file        function.c
  * @date        2021.10.21
- * @author      ĞÅÄîDÁ¦Á¿
- * @brief       ²Ëµ¥¹¦ÄÜÔ´ÎÄ¼ş
+ * @author      ä¿¡å¿µDåŠ›é‡
+ * @brief       èœå•åŠŸèƒ½æºæ–‡ä»¶
  * @github      https://github.com/zsf90/GD32F150C8T6-EXAMPLE
  * @bilibili    https://space.bilibili.com/334715750
  ******************************************************************************/
 #include "function.h"
 #include "74hc595_led.h"
 
-uint8_t current_index = 0; /* µ±Ç°Ë÷Òı */
+uint8_t current_index = 0; /* å½“å‰ç´¢å¼• */
 
 void (*current_operation_index)();
 
 typedef struct
 {
-    uint8_t current;    /* µ±Ç°Ë÷ÒıÖµ */
-    uint8_t up;         /* ÏòÉÏ·­Ë÷Òı */
-    uint8_t down;       /* ÏòÏÂ·­Ë÷Òı */
-    uint8_t enter;      /* È·ÈÏË÷ÒıºÅ */
-    void (*current_operation)();    /* Ö¸Õëº¯Êı */
+    uint8_t current;    /* å½“å‰ç´¢å¼•å€¼ */
+    uint8_t up;         /* å‘ä¸Šç¿»ç´¢å¼• */
+    uint8_t down;       /* å‘ä¸‹ç¿»ç´¢å¼• */
+    uint8_t enter;      /* ç¡®è®¤ç´¢å¼•å· */
+    void (*current_operation)();    /* æŒ‡é’ˆå‡½æ•° */
 } menu_t;
 
 menu_t menu_table[6] =
@@ -30,8 +30,8 @@ menu_t menu_table[6] =
 };
 
 /*******************************************************************************
- * @brief Ö÷Ò³º¯Êı
- * @brief Ö÷Ò³ÏÔÊ¾Ò»Ğ©ÓÃ»§ĞèÒªÕ¹Ê¾µÄÊı¾İ
+ * @brief ä¸»é¡µå‡½æ•°
+ * @brief ä¸»é¡µæ˜¾ç¤ºä¸€äº›ç”¨æˆ·éœ€è¦å±•ç¤ºçš„æ•°æ®
  ******************************************************************************/
 void page_home(void)
 {

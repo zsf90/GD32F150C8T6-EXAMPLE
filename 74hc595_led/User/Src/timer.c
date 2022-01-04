@@ -1,8 +1,8 @@
 /*******************************************************************************
  * @file        timer.c
  * @date        2021.11.6
- * @author      ĞÅÄîDÁ¦Á¿
- * @brief       ¶¨Ê±Æ÷µÄÊ¹ÓÃ
+ * @author      ä¿¡å¿µDåŠ›é‡
+ * @brief       å®šæ—¶å™¨çš„ä½¿ç”¨
  * @github      https://github.com/zsf90/GD32F150C8T6-EXAMPLE
  * @bilibili    https://space.bilibili.com/334715750
  ******************************************************************************/
@@ -10,41 +10,35 @@
 #include "gd32f1x0.h"
 
 /*******************************************************************************
- * @brief ¶¨Ê±Æ÷µÄÅäÖÃ
+ * @brief å®šæ—¶å™¨çš„é…ç½®
  ******************************************************************************/
 void timer_config(void)
 {
     
     
-    /* ´´½¨¶¨Ê±Æ÷½á¹¹Ìå¶ÔÏó */
+    /* åˆ›å»ºå®šæ—¶å™¨ç»“æ„ä½“å¯¹è±¡ */
     timer_parameter_struct      timer_initpara;
     timer_ic_parameter_struct   timer_icinitpara;
     
     /* NVIC Config */
     nvic_priority_group_set(NVIC_PRIGROUP_PRE1_SUB3);
     nvic_irq_enable(TIMER1_IRQn, 1, 2);
-    /* Ê¹ÄÜTIMER1Ê±ÖÓÔ´ */
+    /* ä½¿èƒ½TIMER1æ—¶é’Ÿæº */
     rcu_periph_clock_enable(RCU_TIMER1);
     
-    /* ¸´Î»¶¨Ê±Æ÷ÍâÉè */
+    /* å¤ä½å®šæ—¶å™¨å¤–è®¾ */
     timer_deinit(TIMER1);
 
     
-    /* ³õÊ¼»¯¶¨Ê±Æ÷ÍâÉè½á¹¹ */
+    /* åˆå§‹åŒ–å®šæ—¶å™¨å¤–è®¾ç»“æ„ */
     timer_struct_para_init(&timer_initpara);
     /* TIMER1 Configuration */
-    timer_initpara.prescaler    = 7199;    /* Ô¤·ÖÆµÆ÷Öµ = 10KHz */
+    timer_initpara.prescaler    = 7199;    /* é¢„åˆ†é¢‘å™¨å€¼ = 10KHz */
     timer_initpara.alignedmode  = TIMER_COUNTER_EDGE; /* center-aligned mode selection */
-    timer_initpara.counterdirection = TIMER_COUNTER_UP; /* ÏòÉÏ¼ÆÊı */
+    timer_initpara.counterdirection = TIMER_COUNTER_UP; /* å‘ä¸Šè®¡æ•° */
     timer_initpara.period           = 4999;
     timer_initpara.clockdivision    = TIMER_CKDIV_DIV1;
     timer_init(TIMER1, &timer_initpara);
-    
-    /* TIMER1 CH0 input capture configuration */
-//    timer_icinitpara.icpolarity = TIMER_IC_POLARITY_RISING;
-//    timer_icinitpara.icselection = TIMER_IC_SELECTION_DIRECTTI;
-//    timer_icinitpara.icprescaler = TIMER_IC_PSC_DIV1;
-//    timer_input_capture_config(TIMER1, TIMER_CH_0, &timer_icinitpara);
     
     
     
@@ -53,7 +47,6 @@ void timer_config(void)
     timer_interrupt_flag_clear(TIMER1, TIMER_INT_FLAG_UP);
     timer_interrupt_enable(TIMER1, TIMER_INT_UP);
     timer_enable(TIMER1);
-    
     
 }
 

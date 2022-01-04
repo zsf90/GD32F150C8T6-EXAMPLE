@@ -47,9 +47,11 @@ OF SUCH DAMAGE.
 #include "encoder.h"
 
 extern USART_InitTypeDef usart1;
-
+extern EC11_t ec11_1;
 uint16_t test_number = 0;
 uint16_t test_led_value = 0;
+
+
 /*!
     \brief      this function handles NMI exception
     \param[in]  none
@@ -151,52 +153,47 @@ void PendSV_Handler(void)
 void SysTick_Handler(void)
 {
     led_spark();
-    delay_decrement(); /* delay µÝ¼õ */
+    delay_decrement();
+    
+    if(ec11_1.sw_down_flag == 1){
+        ec11_1.sw_down_time++;
+    }
+    
 }
 
 /*******************************************************************************
- * @brief Íâ²¿ÖÐ¶Ï0-1·þÎñº¯Êý
- * @brief ´¦ÀíÐý×ª±àÂëÆ÷Âö³åÐÅºÅ
+ * @brief 0-1ä¸­æ–­
+ * @brief CLK ä¸Ž DT
  ******************************************************************************/
 void EXTI0_1_IRQHandler(void)
 {
     if(SET == exti_interrupt_flag_get(ENCODER_CLK_EXTI_LINE)){
-        usart_interrupt_enable(USART1, USART_INT_TBE); // Ê¹ÄÜUSART·¢ËÍÆ÷¿ÕÖÐ¶Ï
-        
-        /* ¶ÁÈ¡DT Òý½ÅµÄµçÆ½£¬¼´¿ÉÅÐ¶ÏÐý×ª·½Ïò */
-        if(SET == gpio_input_bit_get(ENCODER_DT_GPIO_PORT, ENCODER_DT_PIN))
-        {/* Õý×ª */
-            test_number++;
-        } else {/* ·´×ª */
-            test_number--;
-        }
         exti_interrupt_flag_clear(ENCODER_CLK_EXTI_LINE);
     }
     
     if(SET == exti_interrupt_flag_get(ENCODER_DT_EXTI_LINE)){
-        
         exti_interrupt_flag_clear(ENCODER_DT_EXTI_LINE);
     }
 }
 
 /*******************************************************************************
- * @brief Íâ²¿ÖÐ¶Ï2-3·þÎñº¯Êý
- * @brief ´¦ÀíÐý×ª±àÂëÆ÷SWÐÅºÅ
- ******************************************************************************/
+ * @brief 2-3 å¤–éƒ¨ä¸­æ–­
+ * @brief SW
+ ************************************************************************** ****/
 void EXTI2_3_IRQHandler(void)
 {
     if(SET == exti_interrupt_flag_get(ENCODER_SW_EXTI_LINE)){
-        test_number++;
+        ec11_1.sw_down_flag = 1;
         exti_interrupt_flag_clear(ENCODER_SW_EXTI_LINE);
     }
 }
 
 /*******************************************************************************
- * @brief ´®¿Ú1ÖÐ¶Ï·þÎñº¯Êý
+ * @brief ä¸²å£1ä¸­æ–­
  ******************************************************************************/
 void USART1_IRQHandler(void)
 {
-    /* ½ÓÊÕÆ÷·Ç¿Õ */
+    
     if(RESET != usart_interrupt_flag_get(USART1, USART_INT_FLAG_RBNE))
     {
         uint8_t ch;
@@ -210,7 +207,7 @@ void USART1_IRQHandler(void)
         }
     }
     
-    /* ·¢ËÍÆ÷¿Õ */
+    
     if(RESET != usart_interrupt_flag_get(USART1, USART_INT_FLAG_TBE))
     {
         usart_data_transmit(USART1, usart1.tx_buffer[usart1.tx_count++]);
@@ -221,7 +218,7 @@ void USART1_IRQHandler(void)
         }
     }
 
-    /* ¿ÕÏÐÅÐ¶Ï */
+    
     if(RESET != usart_interrupt_flag_get(USART1, USART_INT_FLAG_IDLE))
     {
         usart_interrupt_flag_clear(USART1, USART_INT_FLAG_IDLE);
@@ -230,18 +227,12 @@ void USART1_IRQHandler(void)
 
 
 /*******************************************************************************
- * @brief TIMER1 ÖÐ¶Ï´¦Àíº¯Êý
+ * @brief å®šæ—¶å™¨1ä¸­æ–­
  ******************************************************************************/
 void TIMER1_IRQHandler(void)
 {
     if(SET == timer_interrupt_flag_get(TIMER1, TIMER_INT_FLAG_UP)){
         timer_interrupt_flag_clear(TIMER1, TIMER_INT_FLAG_UP);
-//        test_led_value++;
-//        if(test_led_value > 100){
-            gd_eval_led_toggle(LED1);
-//            test_led_value = 0;
-//        }
-        
+        gd_eval_led_toggle(LED1); 
     }
-    
 }

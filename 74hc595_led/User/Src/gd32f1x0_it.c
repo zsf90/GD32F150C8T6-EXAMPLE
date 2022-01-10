@@ -174,6 +174,7 @@ void EXTI0_1_IRQHandler(void)
 {
     FlagStatus clk_value = gpio_input_bit_get(ENCODER_CLK_GPIO_PORT, ENCODER_CLK_PIN);
     FlagStatus dt_value = gpio_input_bit_get(ENCODER_DT_GPIO_PORT, ENCODER_DT_PIN);
+    FlagStatus sw_value = gpio_input_bit_get(ENCODER_SW_GPIO_PORT, ENCODER_SW_PIN);
     // 触发外部中断 CLK
     if(SET == exti_interrupt_flag_get(ENCODER_CLK_EXTI_LINE) && clk_value == RESET && ec11_1.clk_count == 0)
     {
@@ -186,11 +187,28 @@ void EXTI0_1_IRQHandler(void)
 
     if(SET == exti_interrupt_flag_get(ENCODER_CLK_EXTI_LINE) && clk_value == SET && ec11_1.clk_count == 1)
     {
-        if(dt_value ==0 && ec11_1.clk_flag == 1) ec11_1.direction = EC11_CW; // 顺时针
-
+        if(dt_value ==0 && ec11_1.clk_flag == 1)
+        {
+            #if ENABLE_LONG_PRESS == ENABLE
+            ec11_1.direction = EC11_CW;
+            #elif ENABLE_LONG_PRESS == DISABLE
+            if(sw_value == RESET)
+            {
+                ec11_1.direction = EC11_DOWN_CW; // 按钮按下，并逆时针旋转
+            } else {
+                ec11_1.direction = EC11_CW; // 顺时针
+            }
+            #endif 
+        }
+        
         if(dt_value && ec11_1.clk_flag == 0)
         {
-            ec11_1.direction = EC11_CCW; // 逆时针
+            if(sw_value == RESET)
+            {
+                ec11_1.direction = EC11_DOWN_CCW; // 按钮按下，并逆时针旋转
+            } else {
+                ec11_1.direction = EC11_CCW; // 顺时针
+            }
         }
         ec11_1.clk_count = 0;
         exti_interrupt_flag_clear(ENCODER_CLK_EXTI_LINE);

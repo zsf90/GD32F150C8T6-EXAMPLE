@@ -108,47 +108,61 @@ void encoder_handle(void)
         }
     }
 
-    // 长按
-    if(ec11_1.sw_state == SW_LONG_PRESS)
+    /* 按键处理 */
+    switch (ec11_1.sw_state)
     {
-        // 指定多少毫秒加1
-        if(ec11_1.sw_long_press_time == LED_AUTO_SETP)
-        {
-            test_number = 0;
-            ec11_1.sw_long_press_time = 0;
-        }
-        
-        FlagStatus sw_state_temp = gpio_input_bit_get(ENCODER_SW_GPIO_PORT, ENCODER_SW_PIN);
-        if(sw_state_temp == SET)
-        {
-            ec11_1.sw_state = SW_DEFAULT;
-        }
-        
-    }
-    // 单击
-    if(ec11_1.sw_state == SW_CLICK)
-    {
-        // test_number++;
-        ec11_1.sw_state = SW_DEFAULT;
-    }
+    case SW_CLICK: // 单击
 
-    // 双击
-    if(ec11_1.sw_state == SW_DOUBLE_CLICK)
-    {
-        // test_number += 10;
         ec11_1.sw_state = SW_DEFAULT;
+        break;
+    case SW_DOUBLE_CLICK: // 双击
+        ec11_1.sw_state = SW_DEFAULT;
+        break;
+    #if ENABLE_LONG_PRESS
+    case SW_LONG_PRESS: // 长按
+        if(ec11_1.direction == SW_DEFAULT)
+        {
+            // 指定多少毫秒加1
+            if(ec11_1.sw_long_press_time == LED_AUTO_SETP)
+            {
+                test_number = 0;
+                ec11_1.sw_long_press_time = 0;
+            }
+            
+            FlagStatus sw_state_temp = gpio_input_bit_get(ENCODER_SW_GPIO_PORT, ENCODER_SW_PIN);
+            if(sw_state_temp == SET)
+            {
+                ec11_1.sw_state = SW_DEFAULT;
+            }
+        }
+        break;
+    #endif
+    default:
+        break;
     }
 
 
     /* 旋转方向处理 */
-    if(ec11_1.direction == 1)
+    switch (ec11_1.direction)
     {
+    case EC11_CW:
         test_number++;
         ec11_1.direction = EC11_NONE_W;
-    }
-    if(ec11_1.direction == 2)
-    {
+        break;
+    case EC11_CCW:
         test_number--;
         ec11_1.direction = EC11_NONE_W;
+        break;
+    case EC11_DOWN_CW:
+        test_number += 10;
+        ec11_1.direction = EC11_NONE_W;
+        break;
+    case EC11_DOWN_CCW:
+        test_number -= 10;
+        ec11_1.direction = EC11_NONE_W;
+        break;
+    
+    default:
+        break;
     }
 }

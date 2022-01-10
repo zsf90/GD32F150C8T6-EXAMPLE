@@ -5,6 +5,10 @@
  * @brief       旋转编码器头文件
  * @github      https://github.com/zsf90/GD32F150C8T6-EXAMPLE
  * @bilibili    https://space.bilibili.com/334715750
+ * 
+ * Docs
+ * 旋转状态有：顺时针、逆时针、按下并顺时针、按下并逆时针
+ * 按钮状态有：单击、双击、长按（长按和选中的按下并旋转冲突，可以通过宏定义选择
  ******************************************************************************/
 /*******************************************************************************
  * CLK -> PA0
@@ -18,6 +22,9 @@
 
 #define LONG_PRESS_VALUE    (1000)
 #define LED_AUTO_SETP   (50) // 毫秒
+#define ENABLE  (1)
+#define DISABLE (0)
+#define ENABLE_LONG_PRESS   DISABLE // 是否启用按钮双击
 
 typedef enum
 {
@@ -40,6 +47,8 @@ typedef enum
     EC11_NONE_W = 0,   // 没有旋转方向
     EC11_CW,            // 顺时针
     EC11_CCW,           // 逆时针
+    EC11_DOWN_CW,       // 按钮按下并顺时针旋转
+    EC11_DOWN_CCW,      // 按钮按下并逆时针旋转
 } ec11_directron;
 
 /* EC11 编码器结构定义 */

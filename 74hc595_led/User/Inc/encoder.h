@@ -25,6 +25,7 @@ typedef enum
     ENCODER_MODE_EXIT
 } encoder_mode_enum;
 
+
 /* 按钮状态标志 */
 typedef enum
 {
@@ -32,18 +33,27 @@ typedef enum
     SW_CLICK,       // 单击
     SW_LONG_PRESS,  // 长按
     SW_DOUBLE_CLICK // 双击
-} SW_STATE;
+} ec11_switch_state;
+
+typedef enum
+{
+    EC11_NONE_W = 0,   // 没有旋转方向
+    EC11_CW,            // 顺时针
+    EC11_CCW,           // 逆时针
+} ec11_directron;
 
 /* EC11 编码器结构定义 */
 typedef struct
 {
-    uint16_t    sw_down_time; /* >100ms 为单击，> 900为长按 */
-    uint8_t     sw_mode_flag; /* 单击（1），长按（2），双击（3），未知（0）*/
-    uint8_t     sw_down_flag; /* SW 下降沿标志，下降沿触发时为：1，用完后在适当的时候设置为：0 */
-    uint8_t     sw_down_count; /* 下降沿计数，用户判断状态的临时计数值 */
-    uint16_t    sw_long_press_time;  /* sw 长按时间，用于判断长按时多长时间执行一次相应代码 */
+    uint16_t            sw_down_time; /* >100ms 为单击，> 900为长按 */
+    ec11_switch_state   sw_state; /* 单击（1），长按（2），双击（3），未知（0）*/
+    uint8_t             sw_down_flag; /* SW 下降沿标志，下降沿触发时为：1，用完后在适当的时候设置为：0 */
+    uint8_t             sw_down_count; /* 下降沿计数，用户判断状态的临时计数值 */
+    uint16_t            sw_long_press_time;  /* sw 长按时间，用于判断长按时多长时间执行一次相应代码 */
 
-
+    uint8_t             clk_flag; /* 旋转标志 */
+    ec11_directron      direction; /* 0：默认 1: 顺时针 2：逆时针  */
+    uint16_t            clk_count;
 } EC11_t;
 
 /* GPIO Define */
@@ -77,7 +87,5 @@ typedef struct
 
 void encoder_exit_config(encoder_mode_enum _zsf_eme);
 void encoder_handle(void);
-
-void ec11_init(EC11_t ec11);
 
 #endif /* __ENCODER_H */

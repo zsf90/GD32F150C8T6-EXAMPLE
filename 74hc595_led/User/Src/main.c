@@ -48,7 +48,8 @@ OF SUCH DAMAGE.
 #include "encoder.h"
 #include "timer.h"
 
-extern uint16_t test_number;
+extern uint16_t test_number; /* 定义在 gd32f1x0_it.c */
+
 /*!
     \brief      toggle the led every 500ms
     \param[in]  none

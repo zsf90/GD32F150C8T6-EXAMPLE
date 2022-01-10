@@ -160,11 +160,10 @@ void SysTick_Handler(void)
     }
 
     // 当 SW 为长按时，让 led_auto_setp++
-    if(ec11_1.sw_mode_flag == 2)
+    if(ec11_1.sw_state == SW_LONG_PRESS)
     {
         ec11_1.sw_long_press_time++;
     }
-    
 }
 
 /*******************************************************************************
@@ -173,12 +172,28 @@ void SysTick_Handler(void)
  ******************************************************************************/
 void EXTI0_1_IRQHandler(void)
 {
-    if(SET == exti_interrupt_flag_get(ENCODER_CLK_EXTI_LINE)){
+    FlagStatus clk_value = gpio_input_bit_get(ENCODER_CLK_GPIO_PORT, ENCODER_CLK_PIN);
+    FlagStatus dt_value = gpio_input_bit_get(ENCODER_DT_GPIO_PORT, ENCODER_DT_PIN);
+    // 触发外部中断 CLK
+    if(SET == exti_interrupt_flag_get(ENCODER_CLK_EXTI_LINE) && clk_value == RESET && ec11_1.clk_count == 0)
+    {
+        ec11_1.clk_flag = 0;
+        if(dt_value) ec11_1.clk_flag = 1;
+
+        ec11_1.clk_count = 1;
         exti_interrupt_flag_clear(ENCODER_CLK_EXTI_LINE);
     }
-    
-    if(SET == exti_interrupt_flag_get(ENCODER_DT_EXTI_LINE)){
-        exti_interrupt_flag_clear(ENCODER_DT_EXTI_LINE);
+
+    if(SET == exti_interrupt_flag_get(ENCODER_CLK_EXTI_LINE) && clk_value == SET && ec11_1.clk_count == 1)
+    {
+        if(dt_value ==0 && ec11_1.clk_flag == 1) ec11_1.direction = EC11_CW; // 顺时针
+
+        if(dt_value && ec11_1.clk_flag == 0)
+        {
+            ec11_1.direction = EC11_CCW; // 逆时针
+        }
+        ec11_1.clk_count = 0;
+        exti_interrupt_flag_clear(ENCODER_CLK_EXTI_LINE);
     }
 }
 

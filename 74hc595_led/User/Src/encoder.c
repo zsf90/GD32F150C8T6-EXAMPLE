@@ -63,21 +63,21 @@ void encoder_exit_config(encoder_mode_enum _zsf_eme)
  ******************************************************************************/
 void encoder_handle(void)
 {
-    FlagStatus SW_State = gpio_input_bit_get(ENCODER_SW_GPIO_PORT, ENCODER_SW_PIN);
+    // FlagStatus SW_State = gpio_input_bit_get(ENCODER_SW_GPIO_PORT, ENCODER_SW_PIN);
     if(ec11_1.sw_down_flag == 1 && ec11_1.sw_down_time > 10 && ec11_1.sw_down_count == 0)
     {
-        if(SW_State == RESET)
+        if(sw_value == RESET)
         {
             ec11_1.sw_down_count = 1;
         }
     }
 
     /* 按键长按 */
-    if(ec11_1.sw_down_count == 1 && ec11_1.sw_down_time > 500 && SW_State == RESET)
+    if(ec11_1.sw_down_count == 1 && ec11_1.sw_down_time > 500 && sw_value == RESET)
     {
         ec11_1.sw_state = SW_LONG_PRESS;    // 长按
     }
-    if(ec11_1.sw_down_count == 1 && ec11_1.sw_down_time > 500 && SW_State == SET)
+    if(ec11_1.sw_down_count == 1 && ec11_1.sw_down_time > 500 && sw_value == SET)
     {
         ec11_1.sw_down_count = 0;   // 长按需要把 sw_down_count 清零
         ec11_1.sw_down_time = 0;    // 长按需要 sw_down_time 清零
@@ -86,7 +86,7 @@ void encoder_handle(void)
     }
 
     /* 单击双击判断 */
-    if(ec11_1.sw_down_count == 1 && SW_State == SET && ec11_1.sw_down_time < 500)
+    if(ec11_1.sw_down_count == 1 && sw_value == SET && ec11_1.sw_down_time < 500)
     {
         ec11_1.sw_down_count = 2; // sw_down_time < 500 需要判断双击还是单击
         ec11_1.sw_down_time = 0;
@@ -94,7 +94,7 @@ void encoder_handle(void)
 
     if(ec11_1.sw_down_flag == 1 && ec11_1.sw_down_count == 2 && ec11_1.sw_down_time > 100)
     {
-        if(SW_State == RESET)
+        if(sw_value == RESET)
         {
             ec11_1.sw_state = SW_DOUBLE_CLICK;    // 双击
             ec11_1.sw_down_time = 0;
@@ -116,6 +116,7 @@ void encoder_handle(void)
         ec11_1.sw_state = SW_DEFAULT;
         break;
     case SW_DOUBLE_CLICK: // 双击
+        test_number = 0;
         ec11_1.sw_state = SW_DEFAULT;
         break;
     #if ENABLE_LONG_PRESS
@@ -129,8 +130,8 @@ void encoder_handle(void)
                 ec11_1.sw_long_press_time = 0;
             }
             
-            FlagStatus sw_state_temp = gpio_input_bit_get(ENCODER_SW_GPIO_PORT, ENCODER_SW_PIN);
-            if(sw_state_temp == SET)
+            // FlagStatus sw_state_temp = gpio_input_bit_get(ENCODER_SW_GPIO_PORT, ENCODER_SW_PIN);
+            if(sw_value == SET)
             {
                 ec11_1.sw_state = SW_DEFAULT;
             }
@@ -145,19 +146,19 @@ void encoder_handle(void)
     /* 旋转方向处理 */
     switch (ec11_1.direction)
     {
-    case EC11_CW:
+    case EC11_CW:   // 顺时针
         test_number++;
         ec11_1.direction = EC11_NONE_W;
         break;
-    case EC11_CCW:
+    case EC11_CCW:  // 逆时针
         test_number--;
         ec11_1.direction = EC11_NONE_W;
         break;
-    case EC11_DOWN_CW:
+    case EC11_DOWN_CW:  // 按下按钮并顺时针旋转
         test_number += 10;
         ec11_1.direction = EC11_NONE_W;
         break;
-    case EC11_DOWN_CCW:
+    case EC11_DOWN_CCW: // 按下按钮并逆时针旋转
         test_number -= 10;
         ec11_1.direction = EC11_NONE_W;
         break;

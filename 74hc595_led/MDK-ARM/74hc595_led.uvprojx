@@ -423,6 +423,11 @@
               <FileType>1</FileType>
               <FilePath>..\User\Src\timer.c</FilePath>
             </File>
+            <File>
+              <FileName>menus.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\User\Src\menus.c</FilePath>
+            </File>
           </Files>
         </Group>
         <Group>

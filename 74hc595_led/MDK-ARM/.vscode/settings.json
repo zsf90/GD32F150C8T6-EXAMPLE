@@ -1,5 +1,6 @@
 {
     "files.associations": {
-        "gd32f1x0.h": "c"
+        "gd32f1x0.h": "c",
+        "menus.h": "c"
     }
 }

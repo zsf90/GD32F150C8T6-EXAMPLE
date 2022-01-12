@@ -172,9 +172,6 @@ void SysTick_Handler(void)
  ******************************************************************************/
 void EXTI0_1_IRQHandler(void)
 {
-    FlagStatus clk_value = gpio_input_bit_get(ENCODER_CLK_GPIO_PORT, ENCODER_CLK_PIN);
-    FlagStatus dt_value = gpio_input_bit_get(ENCODER_DT_GPIO_PORT, ENCODER_DT_PIN);
-    FlagStatus sw_value = gpio_input_bit_get(ENCODER_SW_GPIO_PORT, ENCODER_SW_PIN);
     // 触发外部中断 CLK
     if(SET == exti_interrupt_flag_get(ENCODER_CLK_EXTI_LINE) && clk_value == RESET && ec11_1.clk_count == 0)
     {

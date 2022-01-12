@@ -21,10 +21,13 @@
 #include "gd32f1x0.h"
 
 #define LONG_PRESS_VALUE    (1000)
-#define LED_AUTO_SETP   (50) // 毫秒
-#define ENABLE  (1)
-#define DISABLE (0)
+#define LED_AUTO_SETP       (50) // 毫秒
+#define ENABLE      (1)
+#define DISABLE     (0)
 #define ENABLE_LONG_PRESS   DISABLE // 是否启用按钮双击
+#define clk_value   gpio_input_bit_get(ENCODER_CLK_GPIO_PORT, ENCODER_CLK_PIN)
+#define dt_value    gpio_input_bit_get(ENCODER_DT_GPIO_PORT, ENCODER_DT_PIN)
+#define sw_value    gpio_input_bit_get(ENCODER_SW_GPIO_PORT, ENCODER_SW_PIN)
 
 typedef enum
 {
@@ -50,6 +53,18 @@ typedef enum
     EC11_DOWN_CW,       // 按钮按下并顺时针旋转
     EC11_DOWN_CCW,      // 按钮按下并逆时针旋转
 } ec11_directron;
+
+typedef enum
+{
+    EC11_NONE = 0,
+    EC11_CW, // 顺时针旋转
+    EC11_CCW, // 逆时针旋转
+    EC11_DOWN_CW, // 按下按钮并顺时针旋转
+    EC11_DOWN_CCW, // 按下按钮并逆时针旋转
+    EC11_CLICK, // 单击中键
+    EC11_LONG_PRESS, // 长按中键
+    EC11_DOUBLE_CLICK, // 双击中键
+} ec11_return_result;
 
 /* EC11 编码器结构定义 */
 typedef struct

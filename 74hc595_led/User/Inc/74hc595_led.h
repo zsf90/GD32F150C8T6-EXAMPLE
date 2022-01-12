@@ -1,8 +1,8 @@
 /*******************************************************************************
  * @file        74hc595_led.h
  * @date        2021.10.21
- * @author      ĞÅÄîDÁ¦Á¿
- * @brief       Ê¹ÓÃ 74HC595 ÓÃ´®ĞĞÏß¿ØÖÆ¶àÎ» LED ÊıÂë¹Ü
+ * @author      ä¿¡å¿µDåŠ›é‡
+ * @brief       ä½¿ç”¨ 74HC595 ç”¨ä¸²è¡Œçº¿æ§åˆ¶å¤šä½ LED æ•°ç ç®¡
  * @github      https://github.com/zsf90/GD32F150C8T6-EXAMPLE
  * @bilibili    https://space.bilibili.com/334715750
  ******************************************************************************/
@@ -21,14 +21,16 @@ typedef enum
     ERR2,
     ERR3,
     ERR4,
-    FU0,
-    FU1,
-    FU2,
-    FU3,
-    FU4
+    FU01,
+    FU02,
+    FU03,
+    FU04,
+    FU05,
 } LED_Index_enum;
 
-/* ÊıÂë¹Ü SPI ³õÊ¼»¯ */
+
+
+/* æ•°ç ç®¡ SPI åˆå§‹åŒ– */
 void init_74hc595(void);
 uint8_t spi_rw_byte(uint8_t data);
 void hc595_show_number(uint16_t n);

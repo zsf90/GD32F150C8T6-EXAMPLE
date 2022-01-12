@@ -69,11 +69,13 @@ uint8_t led_flag_code[][4] = {
     { 0x86, 0xaf, 0xaf, 0xa4 },// ERR2 ->2
     { 0x86, 0xaf, 0xaf, 0xb0 },// ERR3 ->3
     { 0x86, 0xaf, 0xaf, 0x99 },// ERR4 ->4
-    { 0x8e, 0xc1, 0xbf, 0xc0 },// FU-0 ->5
-    { 0x8e, 0xc1, 0xbf, 0xf9 },// FU-1 ->6
-    { 0x8e, 0xc1, 0xbf, 0xa4 },// FU-2 ->7
-    { 0x8e, 0xc1, 0xbf, 0xb0 },// FU-3 ->8
-    { 0x8e, 0xc1, 0xbf, 0x99 },// FU-4 ->9  
+    { 0x8e, 0xc1, 0xc0, 0xf9 },// FU01 ->5
+    { 0x8e, 0xc1, 0xc0, 0xa4 },// FU02 ->6
+    { 0x8e, 0xc1, 0xc0, 0xb0 },// FU03 ->7
+    { 0x8e, 0xc1, 0xc0, 0x99 },// FU04 ->8
+    { 0x8e, 0xc1, 0xc0, 0x92 },// FU05 ->9
+    { 0xff, 0xff, 0xff, 0xff },// 全灭 ->10
+    { 0x00, 0x00, 0x00, 0x00 },// 全亮 ->11
 };
 
 /* 文件内函数声明 */
@@ -160,13 +162,28 @@ void hc595_show_number(uint16_t n)
             spi_rw_byte(led_code[ge]);
             break;
         case 1:
-            spi_rw_byte(led_code[shi]);
+            if(n < 10)
+            {
+                spi_rw_byte(led_code[39]);
+            } else {
+                spi_rw_byte(led_code[shi]);
+            }
             break;
         case 2:
-            spi_rw_byte(led_code[bai]);
+            if(n < 100)
+            {
+                spi_rw_byte(led_code[39]);
+            } else {
+                spi_rw_byte(led_code[bai]);
+            }
             break;
         case 3:
-            spi_rw_byte(led_code[qian]);
+            if(n < 1000)
+            {
+                spi_rw_byte(led_code[39]);
+            } else {
+                spi_rw_byte(led_code[qian]);
+            }
             break;
         }
     }
@@ -238,19 +255,19 @@ void hc595_show_strings(char *str)
         hc595_show_string(ERR4);
     }
     else if(strcmp(str, "FU-0") == 0) {
-        hc595_show_string(FU0);
+        hc595_show_string(FU01);
     }
     else if(strcmp(str, "FU-1") == 0) {
-        hc595_show_string(FU1);
+        hc595_show_string(FU02);
     }
     else if(strcmp(str, "FU-2") == 0) {
-        hc595_show_string(FU2);
+        hc595_show_string(FU03);
     }
     else if(strcmp(str, "FU-3") == 0) {
-        hc595_show_string(FU3);
+        hc595_show_string(FU04);
     }
     else if(strcmp(str, "FU-4") == 0) {
-        hc595_show_string(FU4);
+        hc595_show_string(FU05);
     }
 
 }
@@ -274,19 +291,19 @@ void hc595_show_string(LED_Index_enum str)
     case ERR4:
         show_string(str);
         break;
-    case FU0:
+    case FU01:
         show_string(str);
         break;
-    case FU1:
+    case FU02:
         show_string(str);
         break;
-    case FU2:
+    case FU03:
         show_string(str);
         break;
-    case FU3:
+    case FU04:
         show_string(str);
         break;
-    case FU4:
+    case FU05:
         show_string(str);
         break;
     }
